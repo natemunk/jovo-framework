@@ -76,14 +76,16 @@ export class DependencyInjector {
       return {
         token,
         resolvedValue: tree?.resolvedValue as TYPE,
-        children: tree?.children ?? [],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        children: (tree?.children ?? []) as any,
       };
     } else {
       return undefined;
     }
   }
 
-  private static instantiateClassWithTracing<TYPE, ARGS extends unknown[] = []>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private static instantiateClassWithTracing<TYPE extends AnyObject = any, ARGS extends unknown[] = []>(
     jovo: Jovo,
     clazz: Constructor<TYPE>,
     dependencyPath: InjectionToken[],
@@ -91,9 +93,11 @@ export class DependencyInjector {
   ): DependencyTree<TYPE> {
     const injectedArgs = [...predefinedArgs];
     const storage = MetadataStorage.getInstance();
-    const injectMetadata = storage.getMergedInjectMetadata(clazz);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const injectMetadata = storage.getMergedInjectMetadata(clazz as Constructor<any>);
     const argTypes = Reflect.getMetadata('design:paramtypes', clazz) ?? [];
-    const children: DependencyTree<unknown>[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const children: DependencyTree<any>[] = [];
     for (
       let argumentIndex = predefinedArgs.length;
       argumentIndex < argTypes.length;
@@ -111,7 +115,8 @@ export class DependencyInjector {
       if (!injectionToken) {
         // the argType will usually never be undefined. Even for interfaces or unknown, it will be the Object type.
         // Only when there is a circular import, the argType will be undefined.
-        throw new InvalidDependencyError(clazz, argumentIndex);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        throw new InvalidDependencyError(clazz as Constructor<any>, argumentIndex);
       }
       const childNode = DependencyInjector.resolveInjectionToken(
         jovo,
@@ -119,7 +124,8 @@ export class DependencyInjector {
         dependencyPath,
       );
       if (!childNode) {
-        throw new UnresolvableDependencyError(clazz, injectionToken, argumentIndex);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        throw new UnresolvableDependencyError(clazz as Constructor<any>, injectionToken, argumentIndex);
       }
       injectedArgs.push(childNode.resolvedValue);
       children.push(childNode);
@@ -129,11 +135,13 @@ export class DependencyInjector {
     return {
       token: clazz,
       resolvedValue: instance,
-      children,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      children: children as any,
     };
   }
 
-  static async instantiateClass<TYPE, ARGS extends unknown[] = []>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static async instantiateClass<TYPE extends AnyObject = any, ARGS extends unknown[] = []>(
     jovo: Jovo,
     clazz: Constructor<TYPE>,
     ...predefinedArgs: ARGS
@@ -144,6 +152,6 @@ export class DependencyInjector {
       jovo,
       tree,
     );
-    return tree.resolvedValue;
+    return tree.resolvedValue as TYPE;
   }
 }

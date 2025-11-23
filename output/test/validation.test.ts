@@ -24,7 +24,7 @@ function testStringProperty<T extends AnyObject = AnyObject>(
   propertyKey: keyof T,
   additionalData: Partial<T> = {},
 ) {
-  test(`${propertyKey} - invalid: empty`, async () => {
+  test(`${String(propertyKey)} - invalid: empty`, async () => {
     await validateAndExpectLength(
       objClass,
       {
@@ -34,7 +34,7 @@ function testStringProperty<T extends AnyObject = AnyObject>(
       1,
     );
   });
-  test(`${propertyKey} - invalid: wrong type`, async () => {
+  test(`${String(propertyKey)} - invalid: wrong type`, async () => {
     await validateAndExpectLength(
       objClass,
       {
@@ -44,7 +44,7 @@ function testStringProperty<T extends AnyObject = AnyObject>(
       1,
     );
   });
-  test(`${propertyKey} - valid: string`, async () => {
+  test(`${String(propertyKey)} - valid: string`, async () => {
     await validateAndExpectLength(
       objClass,
       {
@@ -61,7 +61,7 @@ function testOptionalStringProperty<T extends AnyObject = AnyObject>(
   propertyKey: keyof T,
   additionalData: Partial<T> = {},
 ) {
-  test(`${propertyKey} - optional`, async () => {
+  test(`${String(propertyKey)} - optional`, async () => {
     await validateAndExpectLength(
       objClass,
       {
@@ -74,7 +74,7 @@ function testOptionalStringProperty<T extends AnyObject = AnyObject>(
   testStringProperty(objClass, propertyKey, additionalData);
 }
 
-async function validateAndExpectLength<T>(
+async function validateAndExpectLength<T extends AnyObject>(
   objClass: new () => T,
   obj: T,
   expectedLength: number,

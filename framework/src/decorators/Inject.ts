@@ -13,7 +13,7 @@ import { MetadataStorage } from '../metadata/MetadataStorage';
  */
 export function Inject<PROVIDER = AnyObject>(
   token?: InjectionToken,
-): (target: Constructor<PROVIDER>, propertyKey: string, index: number) => void {
+): (target: Constructor<PROVIDER>, propertyKey: string | symbol | undefined, index: number) => void {
   return function (target, propertyKey, index) {
     let resolvedToken: InjectionToken;
     if (token) {

@@ -1,54 +1,66 @@
-const { Project } = require('@lerna/project');
-const { join } = require('path');
-const log = require('npmlog');
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-function getPackagesWithPeerDependency(packages, peerDependencyName) {
-  return packages.filter((pkg) => pkg.peerDependencies && pkg.peerDependencies[peerDependencyName]);
+/**
+ * Updates peer dependencies to match the current version of referenced packages.
+ * Works with Lerna 8+ which removed @lerna/project.
+ */
+
+function getPackages() {
+  // Use lerna list to get all packages
+  const output = execSync('npx lerna list --json --all', { encoding: 'utf8' });
+  return JSON.parse(output);
 }
 
-async function updatePeerDependents(cwd, packages, name) {
-  const peerDependencyPackage = packages.find((pkg) => pkg.name === name);
+function updatePeerDependency(packages, peerDepName) {
+  const sourcePackage = packages.find(pkg => pkg.name === peerDepName);
 
-  if (!peerDependencyPackage) {
-    throw new Error(`Can not update peerDependencies, could not find ${name}`);
+  if (!sourcePackage) {
+    console.log(`Skipping ${peerDepName} - not found in workspace`);
+    return;
   }
 
-  log.info('peer', 'Updating %s peer-dependency to %s', name, peerDependencyPackage.version);
+  const sourceVersion = sourcePackage.version;
+  console.log(`Updating ${peerDepName} peer-dependency to ${sourceVersion}`);
 
-  const filteredPackages = getPackagesWithPeerDependency(packages, name);
+  let updated = 0;
 
-  const promises = filteredPackages.map((pkg) => {
-    pkg.peerDependencies[name] = peerDependencyPackage.version;
-    return pkg.serialize();
-  });
-  await Promise.all(promises);
+  for (const pkg of packages) {
+    const packageJsonPath = path.join(pkg.location, 'package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+
+    if (packageJson.peerDependencies && packageJson.peerDependencies[peerDepName]) {
+      const oldVersion = packageJson.peerDependencies[peerDepName];
+      if (oldVersion !== sourceVersion) {
+        packageJson.peerDependencies[peerDepName] = sourceVersion;
+        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+        console.log(`  Updated ${pkg.name}: ${oldVersion} -> ${sourceVersion}`);
+        updated++;
+      }
+    }
+  }
+
+  if (updated === 0) {
+    console.log(`  No packages needed updating`);
+  }
 }
 
-async function updateFrameworkPeerDependents(cwd, packages) {
-  return updatePeerDependents(cwd, packages, '@jovotech/framework');
-}
+async function main() {
+  try {
+    const packages = getPackages();
+    console.log(`Found ${packages.length} packages\n`);
 
-async function updateOutputPeerDependents(cwd, packages) {
-  return updatePeerDependents(cwd, packages, '@jovotech/output');
-}
+    // Update peer dependencies for core packages
+    updatePeerDependency(packages, '@jovotech/framework');
+    updatePeerDependency(packages, '@jovotech/output');
+    updatePeerDependency(packages, '@jovotech/common');
 
-(async () => {
-  const cwd = join(__dirname, '..');
-  const project = new Project(cwd);
-  const packages = await project.getPackages();
-
-  await Promise.all([
-    updateFrameworkPeerDependents(cwd, packages),
-    updateOutputPeerDependents(cwd, packages),
-  ]);
-})()
-  .then(() => {
-    console.log('Success');
-    process.exit(0);
-  })
-  .catch((e) => {
-    console.error('Failure');
-    console.error((e.stdout || e.message).trim());
-    console.error(e.stack);
+    console.log('\nSuccess');
+  } catch (error) {
+    console.error('Failure:', error.message);
     process.exit(1);
-  });
+  }
+}
+
+main();

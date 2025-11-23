@@ -1,19 +1,13 @@
 {
-  "packages": [
-    "e2e",
-    "common",
-    "framework",
-    "output",
-    "clients/**",
-    "platforms/**",
-    "integrations/**",
-    "examples/**"
-  ],
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
   "ignoreChanges": ["*.md", "*.json", "*.txt", "test/**"],
   "command": {
     "publish": {
       "message": ":bookmark: Publish"
+    },
+    "version": {
+      "allowBranch": ["main", "v4/*"]
     }
-  },
-  "version": "independent"
+  }
 }

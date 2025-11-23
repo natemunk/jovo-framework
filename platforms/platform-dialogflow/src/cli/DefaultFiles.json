@@ -1,9 +1,0 @@
-{
-  "agent.json": {
-    "defaultTimezone": "America/New_York",
-    "description": ""
-  },
-  "package.json": {
-    "version": "1.0.0"
-  }
-}

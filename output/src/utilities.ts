@@ -82,13 +82,13 @@ export function isAnInstance(
   );
 }
 
-export function instanceToObject<T>(instance: T): T {
+export function instanceToObject<T extends object>(instance: T): T {
   if (!isAnInstance(instance)) {
     return instance;
   }
-  return Object.keys(instance).reduce((object: T, key) => {
+  return Object.keys(instance as object).reduce((object: T, key) => {
     const value = (instance as Record<keyof T, T[keyof T]>)[key as keyof T];
-    object[key as keyof T] = isAnInstance(value) ? instanceToObject(value) : value;
+    object[key as keyof T] = isAnInstance(value) ? instanceToObject(value as object) as T[keyof T] : value;
     return object;
   }, {} as T);
 }
