@@ -1,4 +1,4 @@
-import { ArrayElement, JovoLoggerConfig, UnknownObject } from '@jovotech/common';
+import { ArrayElement, JovoLoggerConfig } from '@jovotech/common';
 import _merge from 'lodash.merge';
 import {
   AppData,

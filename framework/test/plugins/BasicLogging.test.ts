@@ -17,7 +17,8 @@ jest.mock('../../src/utilities');
 
 jest
   .spyOn(Utilities, 'copy')
-  .mockImplementation((request?: AnyObject, config?: AnyObject) =>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  .mockImplementation((request?: AnyObject, _config?: AnyObject) =>
     JSON.parse(JSON.stringify(request)),
   );
 

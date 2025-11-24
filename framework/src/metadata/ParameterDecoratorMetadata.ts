@@ -4,8 +4,11 @@ import { ClassDecoratorMetadata } from './ClassDecoratorMetadata';
 export abstract class ParameterDecoratorMetadata<
   TARGET = AnyObject,
 > extends ClassDecoratorMetadata {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  protected constructor(readonly target: Constructor<TARGET> | Function, readonly index: number) {
+  protected constructor(
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    readonly target: Constructor<TARGET> | Function,
+    readonly index: number,
+  ) {
     super(target);
   }
 

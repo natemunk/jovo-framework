@@ -40,8 +40,8 @@ export class JovoSession {
     this.createdAt = this.isNew
       ? new Date()
       : data?.createdAt
-      ? new Date(data.createdAt)
-      : new Date();
+        ? new Date(data.createdAt)
+        : new Date();
   }
 
   getPersistableData(): PersistableSessionData {

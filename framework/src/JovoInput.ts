@@ -39,7 +39,7 @@ export class JovoInput implements Input {
     return this.intent
       ? getIntentName(this.intent)
       : this.nlu?.intent
-      ? getIntentName(this.nlu.intent)
-      : undefined;
+        ? getIntentName(this.nlu.intent)
+        : undefined;
   }
 }

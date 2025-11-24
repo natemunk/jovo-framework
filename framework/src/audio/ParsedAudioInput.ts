@@ -7,7 +7,10 @@ export class ParsedAudioInput {
     return new ParsedAudioInput(samples, audio.sampleRate);
   }
 
-  constructor(public samples: Float32Array, public sampleRate: number) {}
+  constructor(
+    public samples: Float32Array,
+    public sampleRate: number,
+  ) {}
 
   sampleDown(targetSampleRate: number): this {
     this.samples = AudioUtilities.sampleDown(this.samples, this.sampleRate, targetSampleRate);

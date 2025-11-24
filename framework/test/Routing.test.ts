@@ -47,14 +47,6 @@ test('test handler decorator inheritance', async () => {
     }
   }
 
-  @Global()
-  @Component()
-  class ComponentB extends BaseComponent {
-    someHandler() {
-      return this.$send('test');
-    }
-  }
-
   const app = new App({
     plugins: [new ExamplePlatform()],
     components: [ComponentA],

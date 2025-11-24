@@ -16,7 +16,10 @@ export class HandleRequest extends Extensible<AppConfig, AppMiddlewares> {
   activeComponentNode?: ComponentTreeNode;
   platform!: Platform;
 
-  constructor(readonly app: App, readonly server: Server) {
+  constructor(
+    readonly app: App,
+    readonly server: Server,
+  ) {
     super(_cloneDeep(app.config) as AppInitConfig);
     _merge(this, _cloneDeep(app));
   }

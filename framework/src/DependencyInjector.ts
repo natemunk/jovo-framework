@@ -85,7 +85,10 @@ export class DependencyInjector {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private static instantiateClassWithTracing<TYPE extends AnyObject = any, ARGS extends unknown[] = []>(
+  private static instantiateClassWithTracing<
+    TYPE extends AnyObject = any,
+    ARGS extends unknown[] = [],
+  >(
     jovo: Jovo,
     clazz: Constructor<TYPE>,
     dependencyPath: InjectionToken[],
@@ -125,7 +128,11 @@ export class DependencyInjector {
       );
       if (!childNode) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        throw new UnresolvableDependencyError(clazz as Constructor<any>, injectionToken, argumentIndex);
+        throw new UnresolvableDependencyError(
+          clazz as Constructor<any>,
+          injectionToken,
+          argumentIndex,
+        );
       }
       injectedArgs.push(childNode.resolvedValue);
       children.push(childNode);

@@ -5,7 +5,10 @@ import { Jovo } from '../Jovo';
 export interface InjectableOptions {}
 
 export class InjectableMetadata<PROVIDER = AnyObject> extends ClassDecoratorMetadata {
-  constructor(readonly target: Constructor<PROVIDER>, readonly options?: InjectableOptions) {
+  constructor(
+    readonly target: Constructor<PROVIDER>,
+    readonly options?: InjectableOptions,
+  ) {
     super(target);
   }
 }

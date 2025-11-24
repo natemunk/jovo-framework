@@ -46,7 +46,7 @@ export class HandlerMetadata<
   get globalIntentNames(): string[] {
     return this.intents
       .filter((intent) =>
-        typeof intent === 'string' ? this.options?.global : intent.global ?? this.options?.global,
+        typeof intent === 'string' ? this.options?.global : (intent.global ?? this.options?.global),
       )
       .map((intent) => (typeof intent === 'string' ? intent : intent.name));
   }

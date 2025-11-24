@@ -24,15 +24,10 @@ import { TestServer } from './TestServer';
 /**
  * Infers generic types of the provided platform
  */
-export type PlatformTypes<PLATFORM extends Platform> = PLATFORM extends Platform<
-  infer REQUEST,
-  infer RESPONSE,
-  infer JOVO,
-  infer USER,
-  infer DEVICE
->
-  ? { request: REQUEST; response: RESPONSE; jovo: JOVO; user: USER; device: DEVICE }
-  : never;
+export type PlatformTypes<PLATFORM extends Platform> =
+  PLATFORM extends Platform<infer REQUEST, infer RESPONSE, infer JOVO, infer USER, infer DEVICE>
+    ? { request: REQUEST; response: RESPONSE; jovo: JOVO; user: USER; device: DEVICE }
+    : never;
 
 /**
  * Determines whether the provided response type is of type array or not
@@ -90,9 +85,11 @@ export type PartialTestSuiteConfig<PLATFORM extends Platform> = PartialDeep<
 > &
   Partial<Pick<TestSuiteConfig<PLATFORM>, 'platform'>>;
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface TestSuite<PLATFORM extends Platform>
   extends Jovo,
     Plugin<TestSuiteConfig<PLATFORM>> {}
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class TestSuite<PLATFORM extends Platform = TestPlatform> extends Plugin<
   TestSuiteConfig<PLATFORM>
 > {
@@ -179,16 +176,16 @@ export class TestSuite<PLATFORM extends Platform = TestPlatform> extends Plugin<
       this.requestOrInput = isInputObject(requestLike)
         ? new JovoInput(requestLike)
         : isRequestObject(requestLike)
-        ? this.$platform.createRequestInstance(requestLike)
-        : (requestLike as RequestOrInput<PLATFORM>);
+          ? this.$platform.createRequestInstance(requestLike)
+          : (requestLike as RequestOrInput<PLATFORM>);
 
       await this.app.initialize();
 
       const request: PlatformTypes<PLATFORM>['request'] = this.isRequest(this.requestOrInput)
         ? this.requestOrInput
         : this.requestOrInput.type === InputType.Launch
-        ? this.requestBuilder.launch()
-        : this.requestBuilder.intent();
+          ? this.requestBuilder.launch()
+          : this.requestBuilder.intent();
       await this.app.handle(new TestServer(request));
     }
 

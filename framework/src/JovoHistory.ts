@@ -1,6 +1,6 @@
 import { EntityMap, UnknownObject } from '@jovotech/common';
 import { JovoResponse, OutputTemplate } from '@jovotech/output';
-import { Jovo, JovoInput, JovoRequest, Platform } from './index';
+import { JovoInput, JovoRequest, Platform } from './index';
 import { JovoSession } from './JovoSession';
 import { plainToClass } from 'class-transformer';
 

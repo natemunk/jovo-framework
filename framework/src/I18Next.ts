@@ -14,9 +14,8 @@ export interface I18NextResources extends Resource {}
 export type NonIndexedI18NextResources = OmitIndex<I18NextResources>;
 
 // If KEYS is empty after excluding the number- and symbol-key, string is returned, otherwise KEYS without the number- and symbol-key is returned.
-export type TransformI18NextKeys<KEYS> = Exclude<KEYS, number> extends never
-  ? string
-  : Exclude<KEYS, number>;
+export type TransformI18NextKeys<KEYS> =
+  Exclude<KEYS, number> extends never ? string : Exclude<KEYS, number>;
 
 // Type that references all explicit language-keys in I18NextResources or string if I18NextResources was not augmented.
 export type I18NextResourcesLanguageKeys = TransformI18NextKeys<keyof NonIndexedI18NextResources>;
