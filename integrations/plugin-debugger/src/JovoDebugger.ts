@@ -81,7 +81,6 @@ export const DEFAULT_INCLUDED_PROPERTIES = [
   '$device',
   '$session',
   '$entities',
-  '$cms',
   '$route',
   '$user',
   '$data',

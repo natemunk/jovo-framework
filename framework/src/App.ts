@@ -86,9 +86,6 @@ export class App extends Extensible<AppConfig, AppMiddlewares> {
   // @see https://www.jovo.tech/docs/data#app-data
   data: AppData = {};
 
-  // @see https://www.jovo.tech/docs/cms
-  cms: UnknownObject = {};
-
   constructor(config?: AppInitConfig) {
     super(config ? { ...config, components: undefined, providers: undefined } : config);
 

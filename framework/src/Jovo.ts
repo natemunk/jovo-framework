@@ -120,8 +120,6 @@ export abstract class Jovo<
   $user: USER;
   $id: string;
 
-  $cms: UnknownObject;
-
   constructor(
     readonly $app: App,
     readonly $handleRequest: HandleRequest,
@@ -139,8 +137,6 @@ export abstract class Jovo<
     this.$history = new JovoHistory($platform);
     this.$session = this.getSession();
     this.$user = this.$platform.createUserInstance(this as unknown as JOVO);
-
-    this.$cms = $app.cms;
   }
 
   get $config(): AppConfig {
